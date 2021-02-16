@@ -9,14 +9,18 @@ jest.mock("child_process");
 const fakeGetXcodeVersionInfoResult: xcodeUtils.XcodeVersion[] = [
     { version: "10.3.0", buildNumber: "", path: "/Applications/Xcode_10.3.app", releaseType: "GM", stable: true },
     { version: "12.0.0", buildNumber: "", path: "/Applications/Xcode_12_beta.app", releaseType: "Beta", stable: false },
+    { version: "12.4.0", buildNumber: "", path: "/Applications/Xcode_12.app", releaseType: "GM", stable: true },
+    { version: "12.5.1", buildNumber: "", path: "/Applications/Xcode.app", releaseType: "GM", stable: true },
     { version: "11.2.1", buildNumber: "", path: "/Applications/Xcode_11.2.1.app", releaseType: "GM", stable: true },
     { version: "11.4.0", buildNumber: "", path: "/Applications/Xcode_11.4.app", releaseType: "GM", stable: true },
     { version: "11.0.0", buildNumber: "", path: "/Applications/Xcode_11.app", releaseType: "GM", stable: true },
     { version: "11.2.0", buildNumber: "", path: "/Applications/Xcode_11.2.app", releaseType: "GM", stable: true },
 ];
 const fakeGetInstalledXcodeAppsResult: string[] = [
-    "/Applications/Xcode_10.3.app",
     "/Applications/Xcode_12_beta.app",
+    "/Applications/Xcode_12.app",
+    "/Applications/Xcode.app",
+    "/Applications/Xcode_10.3.app",
     "/Applications/Xcode_11.2.1.app",
     "/Applications/Xcode_11.4.app",
     "/Applications/Xcode_11.app",
@@ -24,6 +28,8 @@ const fakeGetInstalledXcodeAppsResult: string[] = [
     "/Applications/Xcode_fake_path.app"
 ];
 const expectedGetAllVersionsResult: xcodeUtils.XcodeVersion[] = [
+    { version: "12.5.1", buildNumber: "", path: "/Applications/Xcode.app", releaseType: "GM", stable: true },
+    { version: "12.4.0", buildNumber: "", path: "/Applications/Xcode_12.app", releaseType: "GM", stable: true },
     { version: "12.0.0", buildNumber: "", path: "/Applications/Xcode_12_beta.app", releaseType: "Beta", stable: false },
     { version: "11.4.0", buildNumber: "", path: "/Applications/Xcode_11.4.app", releaseType: "GM", stable: true },
     { version: "11.2.1", buildNumber: "", path: "/Applications/Xcode_11.2.1.app", releaseType: "GM", stable: true },
@@ -52,13 +58,16 @@ describe("XcodeSelector", () => {
 
     describe("findVersion", () => {
         it.each([
-            ["latest", "12.0.0"],
-            ["latest-stable", "11.4.0"],
+            ["latest", "12.5.1"],
+            ["latest-stable", "12.5.1"],
             ["11", "11.4.0"],
             ["11.x", "11.4.0"],
             ["11.2.x", "11.2.1"],
             ["11.2.0", "11.2.0"],
             ["10.x", "10.3.0"],
+            ["12.4", "12.4.0"],
+            ["12.x", "12.5.1"],
+            ["~12", "12.5.1"],
             ["~11.2.0", "11.2.1"],
             ["^11.2.0", "11.4.0"],
             ["< 11.0", "10.3.0"],
@@ -109,5 +118,5 @@ describe("XcodeSelector", () => {
             expect(() => sel.setVersion(xcodeVersion)).toThrow();
         });
     });
-    
+
 });
