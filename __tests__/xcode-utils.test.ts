@@ -40,6 +40,7 @@ describe("getInstalledXcodeApps", () => {
     it("versions are filtered correctly", () => {
         readdirSyncSpy.mockImplementation(() => fakeReadDirResults);
         const expectedVersions: string[] = [
+            "/Applications/Xcode.app",
             "/Applications/Xcode_11.1.app",
             "/Applications/Xcode_11.2.1.app",
             "/Applications/Xcode_11.4_beta.app",
@@ -128,7 +129,7 @@ describe("getXcodeVersionInfo", () => {
         beforeEach(() => {
             parsePlistFileSpy = jest.spyOn(xcodeUtils, "parsePlistFile");
         });
-    
+
         afterEach(() => {
             jest.resetAllMocks();
             jest.clearAllMocks();
